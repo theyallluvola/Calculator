@@ -1,9 +1,9 @@
-const inputBox = document.getElementById("input");
-const expressionDiv = document.getElementById("expression");
-const resultDiv = document.getElementById("result");
+const inputBox = document.getElementById('input');
+const expressionDiv = document.getElementById('expression');
+const resultDiv = document.getElementById('result');
 
-let expression = "";
-let result = "";
+let expression = '';
+let result = '';
 
 function buttonClick(event) {
     const target = event.target;
@@ -11,35 +11,35 @@ function buttonClick(event) {
     const value = target.dataset.value;
     
     switch (action) {
-        case "number":
+        case 'number':
             addValue(value);
             break;
-        case "clear":
+        case 'clear':
             clear();
             break;
-        case "backspace":
+        case 'backspace':
             backspace();
             break;
-        case "addition":
-        case "subtraction":
-        case "multiplication":
-        case "division":
-            if (expression === '' && resut !== '') {
+        case 'addition':
+        case 'subtraction':
+        case 'multiplication':
+        case 'division':
+            if (expression === '' && result !== '') {
                 startFromResult(value);
-            } else if (expression !== '' && isLastCharOperator()) {
+            } else if (expression !== '' && !isLastCharOperator()) {
                 addValue(value);
             }
             break;
-        case "submit":
-            SubmitEvent()
+        case 'submit':
+            submit()
             break;
-        case "negate":
+        case 'negate':
             negate()
             break;
-        case "mod":
+        case 'mod':
             percentage()
             break;
-        case "decimal":
+        case 'decimal':
             decimal(value)
             break;
             
@@ -68,11 +68,11 @@ function addValue(value) {
             (lastDecimalIndex < lastOperatorIndex || 
             lastDecimalIndex < lastNumberIndex || 
             lastDecimalIndex === -1) && 
-            (expression === '' || expression.slice
-            (lastNumberIndex + 1).indexOf('.') === -1) 
-        )   {
-            expression += value;
-            }
+            (expression === '' || 
+            expression.slice(lastNumberIndex + 1).indexOf('.') === -1) 
+        ) {
+          expression += value;
+        }   
     } else {
         expression += value;
     }
@@ -84,41 +84,40 @@ function updateDisplay(expression, result) {
 }
 
 function clear() {
-    expression = "";
-    result = "";
+    expression = '';
+    result = '';
 }
 
 function backspace() {
     expression = expression.slice(0, -1);
-    console.log(expression);
 }
 
 function isLastCharOperator() {
-    return isNaN(parseInt(expression[expression.slice(- 1)]));
+    return isNaN(parseInt(expression.slice(- 1)));
 }
 
 function startFromResult(value) {
-    expression = result + value;
-    result = "";
+    expression += result + value;
 }
 
 function submit() {
     result = evaluateExpression();
-    expression = "";
+    expression = '';
 }
 
 function evaluateExpression() {
     const evalResult = eval(expression);
+    // checks if evalResult isNaN or infinite. It if is, return a space character ' '
     return isNaN(evalResult) || !isFinite(evalResult) 
-    ? "Error" 
+    ? ' ' 
     : evalResult < 1 
     ? parseFloat(evalResult.toFixed(10)) 
     : parseFloat(evalResult.toFixed(2));
 }
 
 function negate() {
-    //Negate the result if expression is not empty and result is present
-    if (expression !== '' && result !== '') {
+    // Negate the result if expression is not empty and result is present
+    if (expression === '' && result !== '') {
         result = -result;
         // Toggle the sign of the expression if its not already negative and its not empty
     } else if (!expression.startsWith('-') && expression !== '') {
@@ -137,7 +136,7 @@ function percentage() {
         if (!isNaN(result) && isFinite(result)) {
             result /= 100;
         } else {
-            result = 'Error';
+            result = '';
         }
     } else if (result !== '') {
         // If the expression is empty but the result exists, divide by 100
@@ -147,6 +146,6 @@ function percentage() {
 
 function decimal(value) {
     if (!expression.endsWith('.') && !isNaN(expression.slice(-1))) {
-        addValue('value');
+        addValue(value);
     }
 }
