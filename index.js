@@ -59,12 +59,12 @@ inputBox.addEventListener("click", buttonClick);
 
 function addValue(value) {
   if (value === ".") {
-    // Find the index of the last operator in the expression
-    const lastOperatorIndex = expression.search(/[+\-*/]/);
+    // Find the index of the first operator in the expression
+    const firstOperatorIndex = expression.search(/[+\-*/]/);
     // Find the index of the last decimal in the expression
     const lastDecimalIndex = expression.lastIndexOf(".");
     // Find the index of the last number in the expression
-    const lastNumberIndex = Math.max(
+    const lastOperatorIndex = Math.max(
       expression.lastIndexOf("+"),
       expression.lastIndexOf("-"),
       expression.lastIndexOf("*"),
@@ -72,11 +72,11 @@ function addValue(value) {
     );
     // Check if this is the first decimal in the current number or if the expression is empty
     if (
-      (lastDecimalIndex < lastOperatorIndex ||
-        lastDecimalIndex < lastNumberIndex ||
+      (lastDecimalIndex < firstOperatorIndex ||
+        lastDecimalIndex < lastOperatorIndex ||
         lastDecimalIndex === -1) &&
       (expression === "" ||
-        expression.slice(lastNumberIndex + 1).indexOf("-") === -1)
+        expression.slice(lastOperatorIndex + 1).indexOf("-") === -1)
     ) {
       expression += value;
     }
@@ -116,7 +116,7 @@ function evaluateExpression() {
   const evalResult = eval(expression);
   // checks if evalResult isNaN or infinite. It if is, return a space character ' '
   return isNaN(evalResult) || !isFinite(evalResult)
-    ? " "
+    ? "Error"
     : evalResult < 1
     ? parseFloat(evalResult.toFixed(10))
     : parseFloat(evalResult.toFixed(2));
@@ -143,7 +143,7 @@ function percentage() {
     if (!isNaN(result) && isFinite(result)) {
       result /= 100;
     } else {
-      result = "";
+      result = "Error";
     }
   } else if (result !== "") {
     // If expression is empty but the result exisits, divide by 100
